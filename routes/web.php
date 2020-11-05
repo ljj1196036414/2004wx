@@ -12,5 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+   phpinfo();
 });
+Route::any('info', function () {
+    phpinfo();
+});
+Route::get('user/index','UserController@index');

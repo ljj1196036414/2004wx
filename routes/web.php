@@ -18,3 +18,4 @@ Route::any('info', function () {
     phpinfo();
 });
 Route::get('user/index','UserController@index');
+Route::get('weixin','WeixinController@weixin');

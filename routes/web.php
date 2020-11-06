@@ -18,5 +18,5 @@ Route::any('info', function () {
     phpinfo();
 });
 Route::get('user/index','UserController@index');
-Route::post('weixin','WeixinController@wxEvent'); //接收事件推送
+Route::post('/weixin','WeixinController@wxEvent'); //接收事件推送
 Route::get('weixin2','WeixinController@weixin2'); // 获取access_token

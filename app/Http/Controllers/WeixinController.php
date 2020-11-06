@@ -22,6 +22,7 @@ class WeixinController extends Controller
             $xml_str=file_get_contents("php://input");
             $data=simplexml_load_string($xml_str,'SimpleXMLElement',LIBXML_NOCDATA);
             echo "";
+
             die;
 
         }else{

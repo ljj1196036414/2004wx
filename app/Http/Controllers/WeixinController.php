@@ -7,29 +7,7 @@ use Illuminate\Support\Facades\Redis;
 
 class WeixinController extends Controller
 {
-    private function checkSignature()
-    {
-        $signature = $_GET["signature"];
-        $timestamp = $_GET["timestamp"];
-        $nonce = $_GET["nonce"];
-        $token = 'kly';
-        $tmpArr = array($token, $timestamp, $nonce);
-        sort($tmpArr, SORT_STRING);
-        $tmpStr = implode( $tmpArr );
-        $tmpStr = sha1( $tmpStr );
-
-        if( $tmpStr == $signature ){
-            $xml_str=file_get_contents("php://input");
-            $data=simplexml_load_string($xml_str,'SimpleXMLElement',LIBXML_NOCDATA);
-            echo "";
-
-            die;
-
-        }else{
-            echo "";
-        }
-    }
-    public function wxEvent()
+    private function checkSignature ()
     {
         $signature = $_GET["signature"];
         $timestamp = $_GET["timestamp"];
@@ -46,6 +24,27 @@ class WeixinController extends Controller
             return false;
         }
     }
+    public function wxEvent()
+    {
+        $signature = $_GET["signature"];
+        $timestamp = $_GET["timestamp"];
+        $nonce = $_GET["nonce"];
+        $token = 'kly';
+        $tmpArr = array($token, $timestamp, $nonce);
+        sort($tmpArr, SORT_STRING);
+        $tmpStr = implode( $tmpArr );
+        $tmpStr = sha1( $tmpStr );
+
+        if( $tmpStr == $signature ){
+            $xml_str=file_get_contents("php://input");
+            $data=simplexml_load_string($xml_str,'SimpleXMLElement',LIBXML_NOCDATA);
+            echo "";
+            die;
+        }else{
+            echo "";
+        }
+    }
+
 
     public  function weixin(){
         $token=request()->get('echostr','');

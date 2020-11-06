@@ -12,17 +12,15 @@ class WeixinController extends Controller
         $signature = $_GET["signature"];
         $timestamp = $_GET["timestamp"];
         $nonce = $_GET["nonce"];
-
         $token = 'kly';
         $tmpArr = array($token, $timestamp, $nonce);
         sort($tmpArr, SORT_STRING);
         $tmpStr = implode( $tmpArr );
         $tmpStr = sha1( $tmpStr );
 
-        if( $tmpStr == $signature ){ //验证通过
-            //1接收数据
+        if( $tmpStr == $signature ){
             $xml_str=file_get_contents("php://input");
-            file_get_contents('wx_event1.log',$xml_str);
+            $data=simplexml_load_string($xml_str,'SimpleXMLElement',LIBXML_NOCDATA);
             echo "";
             die;
 
@@ -35,7 +33,6 @@ class WeixinController extends Controller
         $signature = $_GET["signature"];
         $timestamp = $_GET["timestamp"];
         $nonce = $_GET["nonce"];
-
         $token = 'kly';
         $tmpArr = array($token, $timestamp, $nonce);
         sort($tmpArr, SORT_STRING);
@@ -48,6 +45,7 @@ class WeixinController extends Controller
             return false;
         }
     }
+
     public  function weixin(){
         $token=request()->get('echostr','');
         if(!empty($token)&&$this->checkSignature()){

@@ -37,6 +37,7 @@ class WeixinController extends Controller
 
         if( $tmpStr == $signature ){
             $xml_str=file_get_contents("php://input");
+            file_put_contents('logs.log',$xml_str);
             $data=simplexml_load_string($xml_str,'SimpleXMLElement',LIBXML_NOCDATA);
             echo "";
             die;

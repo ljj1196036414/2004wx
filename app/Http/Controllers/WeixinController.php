@@ -22,10 +22,10 @@ class WeixinController extends Controller
         if( $tmpStr == $signature ){ //验证通过
             //1接收数据
             $xml_str=file_get_contents("php://input");
-            file_get_contents('wx_event.log',$xml_str);
+            file_get_contents('wx_event1.log',$xml_str);
             echo "";
             die;
-           
+
         }else{
             echo "";
         }

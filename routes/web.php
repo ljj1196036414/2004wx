@@ -19,3 +19,4 @@ Route::any('info', function () {
 });
 Route::get('user/index','UserController@index');
 Route::get('weixin','WeixinController@weixin');
+Route::get('weixin2','WeixinController@weixin2');

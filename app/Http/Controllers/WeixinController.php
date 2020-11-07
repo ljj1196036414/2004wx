@@ -48,17 +48,14 @@ class WeixinController extends Controller
         }
     }
     private function receiveEvent($object){
-        $content="123";//定义一个空的函数
-        switch ($object->Event=='subscribe')
-        {
-            case "subscribe":   //关注事件
-                $content = "欢迎关注李俊鲸，么么哒(づ￣ 3￣)づ";
-                break;
-            case "unsubscribe": //取消关注事件
-                $content = "";
-                break;
+        if($object->MsgType=="event"){
+            if($object->Event=="subscribe"){
+                $content = "欢迎关注";
+                $result = $this->transmitText($object, $content);
+
+            }
         }
-        $result = $this->transmitText($object, $content);
+
         return $result;
     }
     private function transmitText($object, $content)
@@ -72,6 +69,7 @@ class WeixinController extends Controller
             </xml>";
 
         $result = sprintf($textTpl, $object->FromUserName, $object->ToUserName, time(),'text', $content);
+        file_put_contents('logs.log',$result);
         return $result;
     }
 

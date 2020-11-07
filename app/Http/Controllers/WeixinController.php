@@ -39,12 +39,44 @@ class WeixinController extends Controller
             $xml_str=file_get_contents("php://input");
             file_put_contents('logs.log',$xml_str);
             $data=simplexml_load_string($xml_str,'SimpleXMLElement',LIBXML_NOCDATA);
-            echo "";
+            $result=$this->receiveEvent($data);
+            echo "$result";
             die;
         }else{
             echo "";
         }
     }
+    private function receiveEvent($object){
+        $content="";//定义一个空的函数
+        switch ($object->Event)
+        {
+            case "subscribe":   //关注事件
+                $content = "欢迎关注周起，么么哒(づ￣ 3￣)づ";
+                break;
+            case "unsubscribe": //取消关注事件
+                $content = "";
+                break;
+        }
+        $result = $this->transmitText($object, $content);
+        return $result;
+    }
+    private function transmitText($object, $content)
+    {
+        $textTpl = "<xml>
+            <ToUserName><![CDATA[%s]]></ToUserName>
+            <FromUserName><![CDATA[%s]]></FromUserName>
+            <CreateTime>%s</CreateTime>
+            <MsgType><![CDATA[text]]></MsgType>
+            <Content><![CDATA[%s]]></Content>
+            </xml>";
+        $result = sprintf($textTpl, $object->FromUserName, $object->ToUserName, time(), $content);
+        return $result;
+    }
+
+
+
+
+
 
 
     public  function weixin(){

@@ -39,9 +39,8 @@ class WeixinController extends Controller
             $xml_str=file_get_contents("php://input");
             file_put_contents('logs.log',$xml_str);
             $data=simplexml_load_string($xml_str,'SimpleXMLElement',LIBXML_NOCDATA);
-            $result=$this->receiveEvent($data);
-            dd($result);
-            echo "";
+          $this->receiveEvent($data);
+           //dd($result);
             die;
         }else{
             echo "";
@@ -68,9 +67,9 @@ class WeixinController extends Controller
             <Content><![CDATA[%s]]></Content>
             </xml>";
 
-        $result = sprintf($textTpl, $object->FromUserName, $object->ToUserName, time(),'text', $content);
+        $result = sprintf($textTpl,$object->FromUserName,$object->ToUserName,time(),'text',$content);
         file_put_contents('logs.log',$result);
-        return $result;
+        echo  $result;
     }
 
 

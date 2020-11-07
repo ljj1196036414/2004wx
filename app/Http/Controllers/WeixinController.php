@@ -40,6 +40,7 @@ class WeixinController extends Controller
             file_put_contents('logs.log',$xml_str);
             $data=simplexml_load_string($xml_str,'SimpleXMLElement',LIBXML_NOCDATA);
             $result=$this->receiveEvent($data);
+            dd($result);
             echo "";
             die;
         }else{
@@ -47,8 +48,8 @@ class WeixinController extends Controller
         }
     }
     private function receiveEvent($object){
-        $content="";//定义一个空的函数
-        switch ($object->Event)
+        $content="123";//定义一个空的函数
+        switch ($object->Event=='subscribe')
         {
             case "subscribe":   //关注事件
                 $content = "欢迎关注李俊鲸，么么哒(づ￣ 3￣)づ";
@@ -69,6 +70,7 @@ class WeixinController extends Controller
             <MsgType><![CDATA[%s]]></MsgType>
             <Content><![CDATA[%s]]></Content>
             </xml>";
+
         $result = sprintf($textTpl, $object->FromUserName, $object->ToUserName, time(),'text', $content);
         return $result;
     }

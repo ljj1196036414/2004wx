@@ -51,7 +51,7 @@ class WeixinController extends Controller
         switch ($object->Event)
         {
             case "subscribe":   //关注事件
-                $content = "欢迎关注周起，么么哒(づ￣ 3￣)づ";
+                $content = "欢迎关注李俊鲸，么么哒(づ￣ 3￣)づ";
                 break;
             case "unsubscribe": //取消关注事件
                 $content = "";
@@ -66,10 +66,10 @@ class WeixinController extends Controller
             <ToUserName><![CDATA[%s]]></ToUserName>
             <FromUserName><![CDATA[%s]]></FromUserName>
             <CreateTime>%s</CreateTime>
-            <MsgType><![CDATA[text]]></MsgType>
+            <MsgType><![CDATA[%s]]></MsgType>
             <Content><![CDATA[%s]]></Content>
             </xml>";
-        $result = sprintf($textTpl, $object->FromUserName, $object->ToUserName, time(), $content);
+        $result = sprintf($textTpl, $object->FromUserName, $object->ToUserName, time(),'text', $content);
         return $result;
     }
 

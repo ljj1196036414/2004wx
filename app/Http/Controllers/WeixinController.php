@@ -38,10 +38,10 @@ class WeixinController extends Controller
             file_put_contents('logs.log',$xml_str);
             $data=simplexml_load_string($xml_str,'SimpleXMLElement',LIBXML_NOCDATA);
             $access_token=$this->weixin2();
-            file_put_contents('logs.log',$access_token);
             $opten_id=$data->FromUserName;
             $res="https://api.weixin.qq.com/cgi-bin/user/info?access_token="."$access_token"."&openid="."$opten_id"."&lang=zh_CN";
             $reses=$this->http_get($res);
+            file_put_contents('logs.log',$reses);
             $where=json_decode($reses,true);
 //            dd($where);
             $ress = [

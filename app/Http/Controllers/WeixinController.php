@@ -45,7 +45,7 @@ class WeixinController extends Controller
             $where=json_decode($reses,true);
 //            dd($where);
             $ress = [
-                'openid'=>$where['openid'],
+                'openid'=>$opten_id,
                 'nickname'=>$where['nickname'],
                 'sex'=>$where['sex'],
                 'language'=>$where['language'],

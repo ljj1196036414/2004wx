@@ -37,25 +37,7 @@ class WeixinController extends Controller
             $xml_str=file_get_contents("php://input");
             file_put_contents('logs.log',$xml_str);
             $data=simplexml_load_string($xml_str,'SimpleXMLElement',LIBXML_NOCDATA);
-            $access_token=$this->weixin2();
-            $opten_id=$data->FromUserName;
-            $res="https://api.weixin.qq.com/cgi-bin/user/info?access_token="."$access_token"."&openid="."$opten_id"."&lang=zh_CN";
-            $reses=$this->http_get($res);
-            file_put_contents('logs.log',$reses);
-            $where=json_decode($reses,true);
-//            dd($where);
-            $ress = [
-                'openid'=>$opten_id,
-                'nickname'=>$where['nickname'],
-                'sex'=>$where['sex'],
-                'language'=>$where['language'],
-                'city'=>$where['city'],
-                'province'=>$where['province'],
-                'country'=>$where['country'],
-                'subscribe_time'=>$where['subscribe_time']
-            ];
-            //dd($wheres);
-            $inser=UserModel::insert($ress);
+
            // die;
            // dd($inser);
             //$dd=explode($res,true);
@@ -79,6 +61,25 @@ class WeixinController extends Controller
     private function receiveEvent($object){
         if($object->MsgType=="event"){
             if($object->Event=="subscribe"){
+                $access_token=$this->weixin2();
+                $opten_id=$object->FromUserName;
+                $res="https://api.weixin.qq.com/cgi-bin/user/info?access_token="."$access_token"."&openid="."$opten_id"."&lang=zh_CN";
+                $reses=$this->http_get($res);
+                file_put_contents('logs.log',$reses);
+                $where=json_decode($reses,true);
+//            dd($where);
+                $ress = [
+                    'openid'=>$opten_id,
+                    'nickname'=>$where['nickname'],
+                    'sex'=>$where['sex'],
+                    'language'=>$where['language'],
+                    'city'=>$where['city'],
+                    'province'=>$where['province'],
+                    'country'=>$where['country'],
+                    'subscribe_time'=>$where['subscribe_time']
+                ];
+                //dd($wheres);
+                $inser=UserModel::insert($ress);
                 $content = "欢迎关注";
                 $result = $this->transmitText($object, $content);
                 return $result;

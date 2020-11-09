@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserModel extends Model
 {
     protected $table='p_users';
-    protected $primaryKey='openid';
+    protected $primaryKey='pid';
     public $timestamps=false;
 }
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
-use App\model\UsersModel;
+use App\UserModel;
 class WeixinController extends Controller
 {
     private function checkSignature (){
@@ -43,7 +43,21 @@ class WeixinController extends Controller
             $res="https://api.weixin.qq.com/cgi-bin/user/info?access_token="."$access_token"."&openid="."$opten_id"."&lang=zh_CN";
             $reses=$this->http_get($res);
             $where=json_decode($reses,true);
-            $inser=UsersModel::insert($where);
+//            dd($where);
+            $ress = [
+                'openid'=>$where['openid'],
+                'nickname'=>$where['nickname'],
+                'sex'=>$where['sex'],
+                'language'=>$where['language'],
+                'city'=>$where['city'],
+                'province'=>$where['province'],
+                'country'=>$where['country'],
+                'subscribe_time'=>$where['subscribe_time']
+            ];
+            //dd($wheres);
+            $inser=UserModel::insert($ress);
+           // die;
+            dd($inser);
             //$dd=explode($res,true);
           $this->receiveEvent($data);
            //dd($result);

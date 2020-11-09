@@ -10,4 +10,7 @@ class UserController extends Controller
         $res=UserModel::get();
         dd($res);
     }
+    public function get(){
+        echo'<pre>';print_r($_GET);echo'</pre>';
+    }
 }

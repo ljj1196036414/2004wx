@@ -57,7 +57,7 @@ class WeixinController extends Controller
             //dd($wheres);
             $inser=UserModel::insert($ress);
            // die;
-            dd($inser);
+           // dd($inser);
             //$dd=explode($res,true);
           $this->receiveEvent($data);
            //dd($result);

@@ -81,9 +81,9 @@ class WeixinController extends Controller
             if($object->Event=="subscribe"){
                 $content = "欢迎关注";
                 $result = $this->transmitText($object, $content);
+                return $result;
             }
         }
-        return $result;
     }
     private function transmitText($object, $content){
         $textTpl = "<xml>

@@ -107,6 +107,7 @@ class WeixinController extends Controller
            'verify'=>false,
             'body'=>json_encode($manu),
         ]);
+        echo $resoonse;
     }
     private function transmitText($object, $content){
         $textTpl = "<xml>

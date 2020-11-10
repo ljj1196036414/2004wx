@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use App\UserModel;
+use GuzzleHttp\Client;
 class WeixinController extends Controller
 {
     private function checkSignature (){
@@ -87,7 +88,25 @@ class WeixinController extends Controller
         }
     }
     public  function createmanu(){
-        $https=" https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
+        $manu=[
+            "button"=>[
+                "type"=>"click",
+                "name"=>"今日歌曲",
+                "key"=>"V1001_TODAY_MUSIC"
+            ],
+                "button"=>[
+                    "type"=>"view",
+                    "name"=>"百度",
+                    "key"=>"https://www.baidu.com/"
+            ]
+        ];
+        $access_token=$this->weixin2();
+        $https="https://api.weixin.qq.com/cgi-bin/menu/create?access_token=".$access_token;
+        $client=new Client();
+        $resoonse=$client->request('POST',$https,[
+           'verify'=>false,
+            'body'=>json_encode($manu),
+        ]);
     }
     private function transmitText($object, $content){
         $textTpl = "<xml>

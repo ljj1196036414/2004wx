@@ -91,13 +91,13 @@ class WeixinController extends Controller
         $manu=[
             "button"=>[
                 "type"=>"click",
-                "name"=>"今日歌曲",
+                "name"=>"歌曲",
                 "key"=>"V1001_TODAY_MUSIC"
             ],
-                "button"=>[
-                    "type"=>"view",
-                    "name"=>"百度",
-                    "key"=>"https://www.baidu.com/"
+            "button"=>[
+                "type"=>"view",
+                "name"=>"百度",
+                "url"=>"https://www.baidu.com/"
             ]
         ];
         $access_token=$this->weixin2();
@@ -106,7 +106,7 @@ class WeixinController extends Controller
         $client=new Client();
         $resoonse=$client->request('POST',$https,[
            'verify'=>false,
-            'body'=>json_encode($manu),
+            'body'=>json_encode($manu,JSON_UNESCAPED_UNICODE),
         ]);
         $data= $resoonse->getBody();
         echo $data;

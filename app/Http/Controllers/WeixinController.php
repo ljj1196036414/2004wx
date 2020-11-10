@@ -90,14 +90,21 @@ class WeixinController extends Controller
     public  function createmanu(){
         $manu=[
             "button"=>[
-                "type"=>"click",
-                "name"=>"歌曲",
-                "key"=>"V1001_TODAY_MUSIC"
-            ],
-            "button"=>[
-                "type"=>"view",
-                "name"=>"百度",
-                "url"=>"https://www.baidu.com/"
+                    [
+                        "type"=>"click",
+                        "name"=>"歌曲",
+                        "key"=>"V1001_TODAY_MUSIC",
+                        "sub_button"=>[
+                            "type"=>"click",
+                            "name"=>"流行歌曲",
+                            "key"=>"V1001_TODAY_MUSIC"
+                        ]
+                    ],
+                    [
+                        "type"=>"view",
+                        "name"=>"百度",
+                        "url"=>"https://www.baidu.com/"
+                ]
             ]
         ];
         $access_token=$this->weixin2();

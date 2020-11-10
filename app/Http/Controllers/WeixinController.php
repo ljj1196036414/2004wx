@@ -102,12 +102,14 @@ class WeixinController extends Controller
         ];
         $access_token=$this->weixin2();
         $https="https://api.weixin.qq.com/cgi-bin/menu/create?access_token=".$access_token;
+        //dd($https);
         $client=new Client();
         $resoonse=$client->request('POST',$https,[
            'verify'=>false,
             'body'=>json_encode($manu),
         ]);
-        echo $resoonse;
+        $data= $resoonse->getBody();
+        echo $data;
     }
     private function transmitText($object, $content){
         $textTpl = "<xml>

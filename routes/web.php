@@ -20,3 +20,5 @@ Route::any('info', function () {
 Route::any('user/index','UserController@index');
 Route::any('/weixin','WeixinController@wxEvent'); //接收事件推送
 Route::any('weixin2','WeixinController@weixin2'); // 获取access_token
+Route::any('createmanu','WeixinController@createmanu'); // 获取access_token
+

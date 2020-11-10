@@ -86,6 +86,9 @@ class WeixinController extends Controller
             }
         }
     }
+    public  function createmanu(){
+        $https=" https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
+    }
     private function transmitText($object, $content){
         $textTpl = "<xml>
             <ToUserName><![CDATA[%s]]></ToUserName>
@@ -114,7 +117,7 @@ class WeixinController extends Controller
             $token = file_get_contents($url);
             $token=json_decode($token,true);
             $tokens = $token["access_token"];
-            Redis::setex("token",60*60*24,$tokens);
+            Redis::setex("token",3600,$tokens);
         }
        return $tokens;
 

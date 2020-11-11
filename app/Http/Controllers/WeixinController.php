@@ -143,7 +143,7 @@ class WeixinController extends Controller
         $result = $this->transmitText($object, $content);
        // var_dump($content);
         //var_dump($result);die;
-        return $result;
+        echo $result;
     }
     //菜单
     public  function createmanu(){

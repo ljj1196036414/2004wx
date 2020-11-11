@@ -82,7 +82,8 @@ class WeixinController extends Controller
         $data = simplexml_load_string($xml_str, 'SimpleXMLElement', LIBXML_NOCDATA);//把xml文本转换成对象
         if($this->xml_obj->Content=='天气'){
             $Content=$this->tianqi();
-            echo $Content;
+            $object=$this->xml_obj;
+            $aa=$this->transmitText($object,$Content);
            die;
         }
         $datas[]=[

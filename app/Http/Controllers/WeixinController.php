@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\InformationModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use App\UserModel;
 use GuzzleHttp\Client;
 class WeixinController extends Controller
 {
-    private function checkSignature (){
+    private function check(){
         $signature = $_GET["signature"];
         $timestamp = $_GET["timestamp"];
         $nonce = $_GET["nonce"];
@@ -24,29 +25,87 @@ class WeixinController extends Controller
             return false;
         }
     }
-    public function wxEvent(){
-        $signature = $_GET["signature"];
-        $timestamp = $_GET["timestamp"];
-        $nonce = $_GET["nonce"];
-        $token = 'kly';
-        $tmpArr = array($token, $timestamp, $nonce);
-        sort($tmpArr, SORT_STRING);
-        $tmpStr = implode( $tmpArr );
-        $tmpStr = sha1( $tmpStr );
+    public function wxEvent()
+    {
 
-        if( $tmpStr == $signature ){
-            $xml_str=file_get_contents("php://input");
-            file_put_contents('logs.log',$xml_str);
-            $data=simplexml_load_string($xml_str,'SimpleXMLElement',LIBXML_NOCDATA);
+        if($this->check()==false)
+        {
 
-           // die;
-           // dd($inser);
-            //$dd=explode($res,true);
-          $this->receiveEvent($data);
-           //dd($result);
-            die;
-        }else{
-            echo "";
+            //TODO 验签不通过
+            exit;
+        }
+        $xml_str = file_get_contents("php://input");//接收数据 获取最新的数据
+      // dd($xml_str);die;
+        file_put_contents('logs.log', $xml_str);//记录日志
+        $data = simplexml_load_string($xml_str, 'SimpleXMLElement', LIBXML_NOCDATA);//把xml文本转换成对象
+        // die;
+//        dd($data);die;
+        //$dd=explode($rses,true);
+        $msg_type = $data->MsgType;
+        $datas=[];
+        switch ($msg_type) {
+            case 'event' :
+            if ($data->Event=='subscribe') {
+                $this->receiveEvent($data);
+                //dd($result);
+               // echo '1';
+                die;
+
+            } else {
+                echo "";
+            }
+            break;
+            case 'text' ://处理文本信息
+                $datas[]=[
+                    "FromUserName"=>$data->FromUserName,
+                    "CreateTime"=>$data->CreateTime,
+                    "MsgType"=>$data->MsgType,
+                    "Content"=>$data->Content,
+                ];
+                $information_model=new InformationModel();
+                $information_model->insert($datas);
+                //echo '文本';
+                break;
+            case 'image' :          // 处理图片信息
+                $datas[]=[
+                    "FromUserName"=>$data->FromUserName,
+                    "CreateTime"=>$data->CreateTime,
+                    "MsgType"=>$data->MsgType,
+                    "PicUrl" => $data->PicUrl,
+                    "MediaId" => $data->MediaId,
+                ];
+                $information_model=new InformationModel();
+                $information_model->insert($datas);
+                //echo '图片';
+                break;
+            case 'voice' :          // 语音
+                $datas[]=[
+                    "FromUserName" => $data->FromUserName,
+                    "CreateTime" => $data->CreateTime,
+                    "MsgType" => $data->MsgType,
+                    "MediaId" => $data->MediaId,
+                    "Format" => $data->Format,
+                    "ThumbMediaId" =>$data->ThumbMediaId,
+                ];
+                $information_model=new InformationModel();
+                $information_model->insert($datas);
+                //echo '语音';
+                break;
+            case 'video' :          // 视频
+                $datas[]=[
+                    "FromUserName" => $data->FromUserName,
+                    "CreateTime" => $data->CreateTime,
+                    "MsgType" => $data->MsgType,
+                    "MediaId" => $data->MediaId,
+                    "ThumbMediaId" =>$data->ThumbMediaId,
+                ];
+                $information_model=new InformationModel();
+                $information_model->insert($datas);
+                //echo "视频";
+                break;
+
+            default:
+                echo 'default';
         }
     }
     public function http_get($url){
@@ -60,33 +119,31 @@ class WeixinController extends Controller
         return $output;
     }
     private function receiveEvent($object){
-        if($object->MsgType=="event"){
-            if($object->Event=="subscribe"){
-                $access_token=$this->weixin2();
-                $opten_id=$object->FromUserName;
-                $res="https://api.weixin.qq.com/cgi-bin/user/info?access_token="."$access_token"."&openid="."$opten_id"."&lang=zh_CN";
-                $reses=$this->http_get($res);
-                file_put_contents('logs.log',$reses);
-                $where=json_decode($reses,true);
+        $access_token=$this->weixin2();
+        $opten_id=$object->FromUserName;
+        $res="https://api.weixin.qq.com/cgi-bin/user/info?access_token="."$access_token"."&openid="."$opten_id"."&lang=zh_CN";
+        $reses=$this->http_get($res);
+        file_put_contents('logs.log',$reses);
+        $where=json_decode($reses,true);
 //            dd($where);
-                $ress = [
-                    'openid'=>$opten_id,
-                    'nickname'=>$where['nickname'],
-                    'sex'=>$where['sex'],
-                    'language'=>$where['language'],
-                    'city'=>$where['city'],
-                    'province'=>$where['province'],
-                    'country'=>$where['country'],
-                    'subscribe_time'=>$where['subscribe_time']
-                ];
-                //dd($wheres);
-                $inser=UserModel::insert($ress);
-                $content = "欢迎关注";
-                $result = $this->transmitText($object, $content);
-                return $result;
-            }
-        }
+        $ress = [
+            'openid'=>$opten_id,
+            'nickname'=>$where['nickname'],
+            'sex'=>$where['sex'],
+            'language'=>$where['language'],
+            'city'=>$where['city'],
+            'province'=>$where['province'],
+            'country'=>$where['country'],
+            'subscribe_time'=>$where['subscribe_time']
+        ];
+        //dd($wheres);
+        $inser=UserModel::insert($ress);
+//        dd($inser);
+        $content = "欢迎关注";
+        $result = $this->transmitText($object, $content);
+        return $result;
     }
+    //菜单
     public  function createmanu(){
         $manu=[
             "button"=>[
@@ -118,14 +175,15 @@ class WeixinController extends Controller
         $data= $resoonse->getBody();
         echo $data;
     }
+    //xml
     private function transmitText($object, $content){
         $textTpl = "<xml>
-            <ToUserName><![CDATA[%s]]></ToUserName>
-            <FromUserName><![CDATA[%s]]></FromUserName>
-            <CreateTime>%s</CreateTime>
-            <MsgType><![CDATA[%s]]></MsgType>
-            <Content><![CDATA[%s]]></Content>
-            </xml>";
+                    <ToUserName><![CDATA[%s]]></ToUserName>
+                    <FromUserName><![CDATA[%s]]></FromUserName>
+                    <CreateTime>%s</CreateTime>
+                    <MsgType><![CDATA[%s]]></MsgType>
+                    <Content><![%s]></Content>
+                    </xml>";
 
         $result = sprintf($textTpl,$object->FromUserName,$object->ToUserName,time(),'text',$content);
         file_put_contents('logs.log',$result);
@@ -139,6 +197,7 @@ class WeixinController extends Controller
         $access_token=$this->weixin2();
             dd($access_token);
     }
+    //access_token 存缓存
     public  function weixin2(){
         $tokens = Redis::get("token");
         if(!$tokens){
@@ -152,6 +211,7 @@ class WeixinController extends Controller
 
 
     }
+
     public function aaa(){
         Redis::get();
     }

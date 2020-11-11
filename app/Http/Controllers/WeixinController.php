@@ -125,6 +125,7 @@ class WeixinController extends Controller
         file_put_contents('logs.log',$reses ."\n\n",FILE_APPEND);
         $where=json_decode($reses,true);
          // dd($where);
+        //print_r($where);die;
         $ress = [
             'openid'=>$opten_id,
             'nickname'=>$where['nickname'],
@@ -135,6 +136,7 @@ class WeixinController extends Controller
             'country'=>$where['country'],
             'subscribe_time'=>$where['subscribe_time']
         ];
+        //print_r($ress);die;
        // dd($ress);
         $inser=UserModel::insert($ress);
 //        dd($inser);

@@ -219,7 +219,11 @@ class WeixinController extends Controller
                             "type"=>"click",
                             "name"=>"流行歌曲",
                             "key"=>"V1001_TODAY_MUSIC"
-                        ]
+                        ],[
+                            "type"=>"view",
+                            "name"=>"京东",
+                            "url"=>"https://www.jd.com/?cu=true&utm_source=baidu-pinzhuan&utm_medium=cpc&utm_campaign=t_288551095_baidupinzhuan&utm_term=a7fe4217debc4b01983642ac9a22d19d_0_05f6b9057e7445be93857525051243f1"
+                         ]
                     ],
                     [
                         "type"=>"view",

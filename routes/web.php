@@ -22,4 +22,5 @@ Route::any('/weixin','WeixinController@wxEvent'); //接收事件推送
 Route::any('weixin2','WeixinController@weixin2'); // 获取access_token
 Route::post('createmanu','WeixinController@createmanu'); // 菜单
 Route::get('receive','WeixinController@receive'); // 菜单
+Route::get('receiveEvent','WeixinController@receiveEvent'); // 菜单
 

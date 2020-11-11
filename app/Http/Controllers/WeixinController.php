@@ -138,10 +138,12 @@ class WeixinController extends Controller
         ];
         //print_r($ress);die;
        // dd($ress);
-        $inser=UserModel::insert($ress);
+        UserModel::insert($ress);
 //        dd($inser);
         $content = "欢迎关注";
         $result = $this->transmitText($object, $content);
+       // var_dump($content);
+        //var_dump($result);die;
         return $result;
     }
     //菜单
@@ -187,8 +189,8 @@ class WeixinController extends Controller
                     </xml>";
 
         $result = sprintf($textTpl,$object->FromUserName,$object->ToUserName,time(),'text',$content);
-        file_put_contents('logs.log',$result);
-        //echo  $result;
+        //file_put_contents('logs.log',$result);
+        return  $result;
     }
     public  function weixin(){
         // $token=request()->get('echostr','');

@@ -35,7 +35,7 @@ class WeixinController extends Controller
         }
         $xml_str = file_get_contents("php://input");//接收数据 获取最新的数据
       // dd($xml_str);die;
-        file_put_contents('logs.log', $xml_str);//记录日志
+        file_put_contents('logs.log', $xml_str."\n\n",FILE_APPEND);//记录日志
         $data = simplexml_load_string($xml_str, 'SimpleXMLElement', LIBXML_NOCDATA);//把xml文本转换成对象
         // die;
 //        dd($data);die;

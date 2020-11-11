@@ -30,7 +30,6 @@ class WeixinController extends Controller
 
         if($this->check()==false)
         {
-
             //TODO 验签不通过
             exit;
         }
@@ -125,7 +124,7 @@ class WeixinController extends Controller
         $reses=$this->http_get($res);
         file_put_contents('logs.log',$reses);
         $where=json_decode($reses,true);
-//            dd($where);
+         // dd($where);
         $ress = [
             'openid'=>$opten_id,
             'nickname'=>$where['nickname'],
@@ -136,7 +135,7 @@ class WeixinController extends Controller
             'country'=>$where['country'],
             'subscribe_time'=>$where['subscribe_time']
         ];
-        //dd($wheres);
+       // dd($ress);
         $inser=UserModel::insert($ress);
 //        dd($inser);
         $content = "欢迎关注";
@@ -187,7 +186,7 @@ class WeixinController extends Controller
 
         $result = sprintf($textTpl,$object->FromUserName,$object->ToUserName,time(),'text',$content);
         file_put_contents('logs.log',$result);
-        echo  $result;
+        //echo  $result;
     }
     public  function weixin(){
         // $token=request()->get('echostr','');

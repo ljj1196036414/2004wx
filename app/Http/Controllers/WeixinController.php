@@ -122,7 +122,7 @@ class WeixinController extends Controller
         $opten_id=$object->FromUserName;
         $res="https://api.weixin.qq.com/cgi-bin/user/info?access_token="."$access_token"."&openid="."$opten_id"."&lang=zh_CN";
         $reses=$this->http_get($res);
-        file_put_contents('logs.log',$reses);
+        file_put_contents('logs.log',$reses ."\n\n",FILE_APPEND);
         $where=json_decode($reses,true);
          // dd($where);
         $ress = [

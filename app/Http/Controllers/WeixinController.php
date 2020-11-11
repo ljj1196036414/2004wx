@@ -55,7 +55,8 @@ class WeixinController extends Controller
             }
             break;
             case 'text' ://处理文本信息
-                $this->gettext();
+                $result = $this->gettext();
+                return $result;
                 //echo '文本';
                 break;
             case 'image' :          // 处理图片信息
@@ -82,9 +83,11 @@ class WeixinController extends Controller
         $data = simplexml_load_string($xml_str, 'SimpleXMLElement', LIBXML_NOCDATA);//把xml文本转换成对象
         if($this->xml_obj->Content=='天气'){
             $Content=$this->tianqi();
+            //var_dump($Content);die;
             $object=$this->xml_obj;
             $aa=$this->transmitText($object,$Content);
-           die;
+            //$bb=json_decode($aa);
+            return $aa;
         }
         $datas[]=[
             "FromUserName"=>$this->xml_obj->FromUserName,
@@ -102,6 +105,7 @@ class WeixinController extends Controller
         $media_id=$this->xml_obj->MediaId;
         $url='https://api.weixin.qq.com/cgi-bin/media/get?access_token='.$token.'&media_id='.$media_id;
         $img = file_get_contents($url);
+        //var_dump($img);die;
         $images=uniqid();
         $media_path = 'img/'.$images.'.jpg';
         $res = file_put_contents($media_path,$img);
@@ -246,6 +250,7 @@ class WeixinController extends Controller
                     </xml>";
 
         $result = sprintf($textTpl,$object->FromUserName,$object->ToUserName,time(),'text',$content);
+       // var_dump($result);die;
         //file_put_contents('logs.log',$result);
         return  $result;
     }

@@ -9,6 +9,7 @@ use App\UserModel;
 use GuzzleHttp\Client;
 class WeixinController extends Controller
 {
+    protected $xml_obj;
     private function check(){
         $signature = $_GET["signature"];
         $timestamp = $_GET["timestamp"];
@@ -30,9 +31,11 @@ class WeixinController extends Controller
 
 
         $xml_str = file_get_contents("php://input");//接收数据 获取最新的数据
+       // dd($xml_str);
         file_put_contents('logs.log', $xml_str."\n\n",FILE_APPEND);//记录日志
         $data = simplexml_load_string($xml_str, 'SimpleXMLElement', LIBXML_NOCDATA);//把xml文本转换成对象
-
+        //dd($data);
+        $this->xml_obj=$data;
 
         if($this->check()==false)
         {
@@ -54,57 +57,113 @@ class WeixinController extends Controller
             }
             break;
             case 'text' ://处理文本信息
-                $datas[]=[
-                    "FromUserName"=>$data->FromUserName,
-                    "CreateTime"=>$data->CreateTime,
-                    "MsgType"=>$data->MsgType,
-                    "Content"=>$data->Content,
-                ];
-                $information_model=new InformationModel();
-                $information_model->insert($datas);
+                $this->gettext();
                 //echo '文本';
                 break;
             case 'image' :          // 处理图片信息
-                $datas[]=[
-                    "FromUserName"=>$data->FromUserName,
-                    "CreateTime"=>$data->CreateTime,
-                    "MsgType"=>$data->MsgType,
-                    "PicUrl" => $data->PicUrl,
-                    "MediaId" => $data->MediaId,
-                ];
-                $information_model=new InformationModel();
-                $information_model->insert($datas);
+                $this->getimage();
+
                 //echo '图片';
                 break;
             case 'voice' :          // 语音
-                $datas[]=[
-                    "FromUserName" => $data->FromUserName,
-                    "CreateTime" => $data->CreateTime,
-                    "MsgType" => $data->MsgType,
-                    "MediaId" => $data->MediaId,
-                    "Format" => $data->Format,
-                    "ThumbMediaId" =>$data->ThumbMediaId,
-                ];
-                $information_model=new InformationModel();
-                $information_model->insert($datas);
+                $this ->voice();
                 //echo '语音';
                 break;
-            case 'video' :          // 视频
-                $datas[]=[
-                    "FromUserName" => $data->FromUserName,
-                    "CreateTime" => $data->CreateTime,
-                    "MsgType" => $data->MsgType,
-                    "MediaId" => $data->MediaId,
-                    "ThumbMediaId" =>$data->ThumbMediaId,
-                ];
-                $information_model=new InformationModel();
-                $information_model->insert($datas);
+            case 'video' :
+                $this->video();
                 //echo "视频";
                 break;
-
             default:
                 echo 'default';
         }
+    }
+    //处理文本
+    public function gettext(){
+        //获取access_token
+        $datas[]=[
+            "FromUserName"=>$this->xml_obj->FromUserName,
+            "CreateTime"=>$this->xml_obj->CreateTime,
+            "MsgType"=>$this->xml_obj->MsgType,
+            "Content"=>$this->xml_obj->Content,
+        ];
+        $information_model=new InformationModel();
+        $information_model->insert($datas);
+    }
+    //处理图片
+    public function getimage(){
+       // echo "234567";die;
+        $token=$this->weixin2();
+        $media_id=$this->xml_obj->MediaId;
+        $url='https://api.weixin.qq.com/cgi-bin/media/get?access_token='.$token.'&media_id='.$media_id;
+        $img = file_get_contents($url);
+        $images=uniqid();
+        $media_path = 'img/'.$images.'.jpg';
+        $res = file_put_contents($media_path,$img);
+        if($res){
+           // TODO 成功
+        }else{
+            // TODO 失败
+        }
+
+        $datas[]=[
+            "FromUserName"=>$this->xml_obj->FromUserName,
+            "CreateTime"=>$this->xml_obj->CreateTime,
+            "MsgType"=>$this->xml_obj->MsgType,
+            "PicUrl" => $this->xml_obj->PicUrl,
+            "MediaId" => $this->xml_obj->MediaId,
+        ];
+        $information_model=new InformationModel();
+        $information_model->insert($datas);
+    }
+    //处理语音
+    public function voice(){
+        $token=$this->weixin2();
+        $media_id=$this->xml_obj->MediaId;
+        $url='https://api.weixin.qq.com/cgi-bin/media/get/jssdk?access_token='.$token.'&media_id='.$media_id;
+        $img = file_get_contents($url);
+        $images=uniqid();
+        $media_path = 'voice/'.$images.'.speex';
+        $res = file_put_contents($media_path,$img);
+        if($res){
+            //echo "成功";die;
+            // TODO 成功
+        }else{
+            // TODO 失败
+        }
+        $datas[]=[
+            "FromUserName" => $this->xml_obj->FromUserName,
+            "CreateTime" => $this->xml_obj->CreateTime,
+            "MsgType" => $this->xml_obj->MsgType,
+            "MediaId" => $this->xml_obj->MediaId,
+            "Format" => $this->xml_obj->Format,
+            "ThumbMediaId" =>$this->xml_obj->ThumbMediaId,
+        ];
+        $information_model=new InformationModel();
+        $information_model->insert($datas);
+    }
+    //处理视频
+    public function video(){
+        $token=$this->weixin2();
+        $media_id=$this->xml_obj->MediaId;
+        $url='https://api.weixin.qq.com/cgi-bin/media/get?access_token='.$token.'&media_id='.$media_id;
+        $img = file_get_contents($url);
+        $images=uniqid();
+        $media_path = 'video/'.$images.'.jpg';
+        $res = file_put_contents($media_path,$img);
+        if($res){
+            // TODO 成功
+        }else{
+            // TODO 失败
+        }
+        $datas[]=[
+            "FromUserName" =>  $this->xml_obj->FromUserName,
+            "CreateTime" =>  $this->xml_obj->CreateTime,
+            "MsgType" =>  $this->xml_obj->MsgType,
+            "MediaId" =>  $this->xml_obj->MediaId,
+            "ThumbMediaId" => $this->xml_obj->ThumbMediaId,
+        ];
+        $information_model=new InformationModel();
+        $information_model->insert($datas);
     }
     public function http_get($url){
         $ch = curl_init();
@@ -206,7 +265,9 @@ class WeixinController extends Controller
 
 
     }
-
+    public  function tianqi(){
+        file_get_contents("post://input");
+    }
     public function aaa(){
         Redis::get();
     }

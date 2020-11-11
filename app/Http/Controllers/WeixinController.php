@@ -123,8 +123,6 @@ class WeixinController extends Controller
         $reses=$this->http_get($res);
         file_put_contents('logs.log',$reses ."\n\n",FILE_APPEND);
         $where=json_decode($reses,true);
-         // dd($where);
-        //print_r($where);die;
         $ress = [
             'openid'=>$opten_id,
             'nickname'=>$where['nickname'],
@@ -135,14 +133,9 @@ class WeixinController extends Controller
             'country'=>$where['country'],
             'subscribe_time'=>$where['subscribe_time']
         ];
-        //print_r($ress);die;
-       // dd($ress);
         UserModel::insert($ress);
-//        dd($inser);
         $content = "欢迎关注";
         $result = $this->transmitText($object, $content);
-       // var_dump($content);
-        //var_dump($result);die;
         echo $result;
     }
     //菜单

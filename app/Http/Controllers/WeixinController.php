@@ -177,7 +177,7 @@ class WeixinController extends Controller
                     <FromUserName><![CDATA[%s]]></FromUserName>
                     <CreateTime>%s</CreateTime>
                     <MsgType><![CDATA[%s]]></MsgType>
-                    <Content><![%s]></Content>
+                    <Content><![CDATA[%s]]></Content>
                     </xml>";
 
         $result = sprintf($textTpl,$object->FromUserName,$object->ToUserName,time(),'text',$content);

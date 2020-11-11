@@ -45,9 +45,8 @@ class WeixinController extends Controller
         switch ($msg_type) {
             case 'event' :
             if ($data->Event=='subscribe') {
-                $this->receiveEvent($data);
-                //dd($result);
-               // echo '1';
+                $xml = $this->receiveEvent($data);
+                echo $xml;
                 die;
 
             } else {

@@ -23,5 +23,6 @@ Route::any('weixin2','WeixinController@weixin2'); // 获取access_token
 Route::post('createmanu','WeixinController@createmanu'); // 菜单
 Route::get('receive','WeixinController@receive'); // 菜单
 Route::get('receiveEvent','WeixinController@receiveEvent'); // 菜单
-Route::get('gettext','WeixinController@gettext'); // 菜单
+Route::get('gettext','WeixinController@gettext'); // 文本处理
+Route::post('tianqi','WeixinController@tianqi'); // 天气
 

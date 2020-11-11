@@ -28,8 +28,6 @@ class WeixinController extends Controller
     }
     public function wxEvent()
     {
-
-
         $xml_str = file_get_contents("php://input");//接收数据 获取最新的数据
        // dd($xml_str);
         file_put_contents('logs.log', $xml_str."\n\n",FILE_APPEND);//记录日志
@@ -80,6 +78,13 @@ class WeixinController extends Controller
     //处理文本
     public function gettext(){
         //获取access_token
+        $xml_str = file_get_contents("php://input");//接收数据 获取最新的数据
+        $data = simplexml_load_string($xml_str, 'SimpleXMLElement', LIBXML_NOCDATA);//把xml文本转换成对象
+        if($this->xml_obj->Content=='天气'){
+            $Content=$this->tianqi();
+            echo $Content;
+           die;
+        }
         $datas[]=[
             "FromUserName"=>$this->xml_obj->FromUserName,
             "CreateTime"=>$this->xml_obj->CreateTime,
@@ -266,7 +271,16 @@ class WeixinController extends Controller
 
     }
     public  function tianqi(){
-        file_get_contents("post://input");
+        $url = "http://api.k780.com:88/?app=weather.future&weaid=beijing&&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json";
+        $weather = file_get_contents($url);
+        $weather = json_decode($weather,true);
+        if($weather["success"]){
+            $content = "";
+            foreach ($weather["result"] as $v) {
+                $content .= "\n"."地区:" . $v['citynm'] .","."日期:" . $v['days'] . $v['week'] .","."温度:" . $v['temperature'] .","."风速:" . $v['winp'] .","."天气:" . $v['weather'];
+            }
+        }
+        return $content;
     }
     public function aaa(){
         Redis::get();

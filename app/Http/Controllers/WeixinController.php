@@ -247,9 +247,7 @@ class WeixinController extends Controller
         $manu=[
             "button"=>[
                     [
-                        "type"=>"click",
-                        "name"=>"歌曲",
-                        "key"=>"V1001_TODAY_MUSIC",
+                        "name"=>"菜单",
                         "sub_button"=>[
                             [
                                 "type"=>"click",
@@ -277,7 +275,7 @@ class WeixinController extends Controller
         ];
         $access_token=$this->weixin2();
         $https="https://api.weixin.qq.com/cgi-bin/menu/create?access_token=".$access_token;
-        //dd($https);
+        dd($https);
         $client=new Client();
         $resoonse=$client->request('POST',$https,[
            'verify'=>false,
@@ -287,7 +285,7 @@ class WeixinController extends Controller
         echo $data;
     }
     public  function qiandao(){
-        
+
     }
     //xml
     private function transmitText($object, $content){

@@ -273,14 +273,17 @@ class WeixinController extends Controller
                 ]
             ]
         ];
+        
         $access_token=$this->weixin2();
         $https="https://api.weixin.qq.com/cgi-bin/menu/create?access_token=".$access_token;
-        dd($https);
+       // dd($https);
         $client=new Client();
-        $resoonse=$client->request('POST',$https,[
+
+        $resoonse=$client->request('post',$https,[
            'verify'=>false,
             'body'=>json_encode($manu,JSON_UNESCAPED_UNICODE),
         ]);
+
         $data= $resoonse->getBody();
         echo $data;
     }

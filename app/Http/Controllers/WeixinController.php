@@ -53,12 +53,16 @@ class WeixinController extends Controller
                     if ($data->Event=='subscribe') {
                         $xml = $this->receiveEvent($data);
                         echo $xml;
+                        ///echo '111';
                         die;
                     } else {
+                        //echo '2222';die;
                         echo "";
                     }
                 }else{
-                    echo "欢迎回来";die;
+                    $content = "欢迎回来";
+                    $result = $this->transmitText($openid, $content);
+                    echo $result;die;
                 }
 
             break;

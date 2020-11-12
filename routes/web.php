@@ -25,4 +25,9 @@ Route::get('receive','WeixinController@receive'); // 菜单
 Route::get('receiveEvent','WeixinController@receiveEvent'); // 菜单
 Route::get('gettext','WeixinController@gettext'); // 文本处理
 Route::post('tianqi','WeixinController@tianqi'); // 天气
+Route::get('time',function(){
+
+    echo strtotime('Y-m-d');
+    echo date('Y-m-d',time());
+});
 

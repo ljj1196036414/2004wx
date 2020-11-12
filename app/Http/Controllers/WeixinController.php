@@ -54,26 +54,26 @@ class WeixinController extends Controller
                     $aa=$this->transmitText($object,$Content);
                     //$bb=json_decode($aa);
                     return $aa;die;
-                }
-                if($EventKey=='V1002_TODAY_MUSIC'){   //签到                    //echo '11';die;
+                }//天气
+                if($EventKey=='V1002_TODAY_MUSIC'){    //签到
                     $FromUserName=$this->xml_obj->FromUserName;
                     //dd($FromUserName);
                     $key='wx:FromUserName:'.$FromUserName;
-                    Redis::zAdd($key,$FromUserName,time());
-                    $username=Redis::zrange($key,0,-1);
-                    //dd($username);
+                    Redis::zAdd($key,$FromUserName,strtotime(date("Y-m-d")));
+                    $user_time=Redis::zrange($key,0,-1);
+//                    dd($user_time);
                     $time=strtotime(date("Y-m-d"));
-                    //dd($time);
-                    if(date('Y-m-d',$username==strtotime('Y-m-d'))){
+//                    dd($time);
+                    if(in_array($time,$user_time)){
                         $Content='今天已签到';
                     }else {
                         $Content = '签到成功';
-
                     }
-                    $object=$this->xml_obj;
-                    return $this->transmitText($Content,$object);
-                }
-               // echo '22';die;
+                }//签到
+                $object=$this->xml_obj;
+                return $this->transmitText($object,$Content);
+
+
                 $openid=$this->xml_obj->FromUserName;
                 $where=[
                     'openid'=>$openid,

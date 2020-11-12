@@ -45,7 +45,9 @@ class WeixinController extends Controller
         switch ($msg_type) {
             case 'event' :
                 $EventKey=$this->xml_obj->EventKey;
-                if($EventKey==='V1001_TODAY_MUSIC'){
+                //var_dump($EventKey);die();
+                if($EventKey=='V1001_TODAY_MUSIC'){
+                    //echo '11';die;
                     $Content=$this->tianqi();
                     //var_dump($Content);die;
                     $object=$this->xml_obj;
@@ -53,6 +55,7 @@ class WeixinController extends Controller
                     //$bb=json_decode($aa);
                     return $aa;die;
                 }
+               // echo '22';die;
                 $openid=$this->xml_obj->FromUserName;
                 $where=[
                     'openid'=>$openid,

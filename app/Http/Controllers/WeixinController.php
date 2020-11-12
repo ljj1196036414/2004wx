@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\InformationModel;
+use App\model\UsersModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use App\UserModel;
@@ -34,25 +35,32 @@ class WeixinController extends Controller
         $data = simplexml_load_string($xml_str, 'SimpleXMLElement', LIBXML_NOCDATA);//把xml文本转换成对象
         //dd($data);
         $this->xml_obj=$data;
-
         if($this->check()==false)
         {
             //TODO 验签不通过
             exit;
         }
-
-        $msg_type = $data->MsgType;
-        $datas=[];
+        $msg_type =$this->xml_obj->MsgType;
+        //dd($msg_type);
         switch ($msg_type) {
             case 'event' :
-            if ($data->Event=='subscribe') {
-                $xml = $this->receiveEvent($data);
-                echo $xml;
-                die;
+                $openid=$this->xml_obj->FromUserName;
+                $where=[
+                    'openid'=>$openid,
+                ];
+                $res=UserModel::where($where)->first();
+                if(empty($res)){
+                    if ($data->Event=='subscribe') {
+                        $xml = $this->receiveEvent($data);
+                        echo $xml;
+                        die;
+                    } else {
+                        echo "";
+                    }
+                }else{
+                    echo "欢迎回来";die;
+                }
 
-            } else {
-                echo "";
-            }
             break;
             case 'text' ://处理文本信息
                 $result = $this->gettext();
@@ -216,14 +224,16 @@ class WeixinController extends Controller
                         "name"=>"歌曲",
                         "key"=>"V1001_TODAY_MUSIC",
                         "sub_button"=>[
-                            "type"=>"click",
-                            "name"=>"流行歌曲",
-                            "key"=>"V1001_TODAY_MUSIC"
-                        ],[
-                            "type"=>"view",
-                            "name"=>"京东",
-                            "url"=>"https://www.jd.com/?cu=true&utm_source=baidu-pinzhuan&utm_medium=cpc&utm_campaign=t_288551095_baidupinzhuan&utm_term=a7fe4217debc4b01983642ac9a22d19d_0_05f6b9057e7445be93857525051243f1"
-                         ]
+                            [
+                                "type"=>"click",
+                                "name"=>"流行歌曲",
+                                "key"=>"V1001_TODAY_MUSIC"
+                            ],[
+                                "type"=>"view",
+                                "name"=>"京东",
+                                "url"=>"https://www.jd.com/"
+                            ]
+                        ]
                     ],
                     [
                         "type"=>"view",

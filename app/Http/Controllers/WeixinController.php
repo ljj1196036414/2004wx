@@ -55,6 +55,15 @@ class WeixinController extends Controller
                     //$bb=json_decode($aa);
                     return $aa;die;
                 }
+                if($EventKey=='V1002_TODAY_MUSIC'){
+                    //echo '11';die;
+                    $Content=$this->qiandao();
+                    //var_dump($Content);die;
+                    $object=$this->xml_obj;
+                    $aa=$this->transmitText($object,$Content);
+                    //$bb=json_decode($aa);
+                    return $aa;die;
+                }
                // echo '22';die;
                 $openid=$this->xml_obj->FromUserName;
                 $where=[
@@ -248,6 +257,11 @@ class WeixinController extends Controller
                                 "key"=>"V1001_TODAY_MUSIC"
                             ],
                             [
+                                "type"=>"click",
+                                "name"=>"签到",
+                                "key"=>"V1002_TODAY_MUSIC"
+                            ],
+                            [
                                 "type"=>"view",
                                 "name"=>"京东",
                                 "url"=>"https://www.jd.com/"
@@ -271,6 +285,9 @@ class WeixinController extends Controller
         ]);
         $data= $resoonse->getBody();
         echo $data;
+    }
+    public  function qiandao(){
+        
     }
     //xml
     private function transmitText($object, $content){

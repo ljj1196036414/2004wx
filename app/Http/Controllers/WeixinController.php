@@ -61,8 +61,10 @@ class WeixinController extends Controller
                     }
                 }else{
                     $content = "欢迎回来";
-                    $result = $this->transmitText($openid, $content);
-                    echo $result;die;
+                    $object=$this->xml_obj->ToUserName;
+                    $result = $this->transmitText($object, $content);
+                    echo $result;
+                    die;
                 }
 
             break;

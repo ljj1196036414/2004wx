@@ -44,6 +44,15 @@ class WeixinController extends Controller
         //dd($msg_type);
         switch ($msg_type) {
             case 'event' :
+                $EventKey=$this->xml_obj->EventKey;
+                if($EventKey==='V1001_TODAY_MUSIC'){
+                    $Content=$this->tianqi();
+                    //var_dump($Content);die;
+                    $object=$this->xml_obj;
+                    $aa=$this->transmitText($object,$Content);
+                    //$bb=json_decode($aa);
+                    return $aa;die;
+                }
                 $openid=$this->xml_obj->FromUserName;
                 $where=[
                     'openid'=>$openid,
@@ -66,7 +75,6 @@ class WeixinController extends Controller
                     echo $result;
                     die;
                 }
-
             break;
             case 'text' ://处理文本信息
                 $result = $this->gettext();
@@ -199,6 +207,7 @@ class WeixinController extends Controller
         curl_close($ch);    //关闭
         return $output;
     }
+    //添加用户
     private function receiveEvent($object){
         $access_token=$this->weixin2();
         $opten_id=$object->FromUserName;
@@ -232,9 +241,10 @@ class WeixinController extends Controller
                         "sub_button"=>[
                             [
                                 "type"=>"click",
-                                "name"=>"流行歌曲",
+                                "name"=>"天气",
                                 "key"=>"V1001_TODAY_MUSIC"
-                            ],[
+                            ],
+                            [
                                 "type"=>"view",
                                 "name"=>"京东",
                                 "url"=>"https://www.jd.com/"

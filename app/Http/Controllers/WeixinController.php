@@ -46,7 +46,7 @@ class WeixinController extends Controller
             case 'event' :
                 $EventKey=$this->xml_obj->EventKey;
                 //var_dump($EventKey);die();
-                if($EventKey=='V1001_TODAY_MUSIC'){
+                if($EventKey=='V1001_TODAY_MUSIC'){ // 天气
                     //echo '11';die;
                     $Content=$this->tianqi();
                     //var_dump($Content);die;
@@ -55,14 +55,23 @@ class WeixinController extends Controller
                     //$bb=json_decode($aa);
                     return $aa;die;
                 }
-                if($EventKey=='V1002_TODAY_MUSIC'){
-                    //echo '11';die;
-                    $Content=$this->qiandao();
-                    //var_dump($Content);die;
+                if($EventKey=='V1002_TODAY_MUSIC'){   //签到                    //echo '11';die;
+                    $FromUserName=$this->xml_obj->FromUserName;
+                    //dd($FromUserName);
+                    $key='wx:FromUserName:'.$FromUserName;
+                    Redis::zAdd($key,$FromUserName,time());
+                    $username=Redis::zrange($key,0,-1);
+                    //dd($username);
+                    $time=strtotime(date("Y-m-d"));
+                    //dd($time);
+                    if(date('Y-m-d',$username==strtotime('Y-m-d'))){
+                        $Content='今天已签到';
+                    }else {
+                        $Content = '签到成功';
+
+                    }
                     $object=$this->xml_obj;
-                    $aa=$this->transmitText($object,$Content);
-                    //$bb=json_decode($aa);
-                    return $aa;die;
+                    return $this->transmitText($Content,$object);
                 }
                // echo '22';die;
                 $openid=$this->xml_obj->FromUserName;
@@ -84,6 +93,7 @@ class WeixinController extends Controller
                     $content = "欢迎回来";
                     $object=$this->xml_obj;
                     $result = $this->transmitText($object, $content);
+
                     echo $result;
                     die;
                 }
@@ -240,6 +250,7 @@ class WeixinController extends Controller
         UserModel::insert($ress);
         $content = "欢迎关注";
         $result = $this->transmitText($object, $content);
+        //dd($result);
         echo $result;
     }
     //菜单
@@ -273,7 +284,7 @@ class WeixinController extends Controller
                 ]
             ]
         ];
-        
+
         $access_token=$this->weixin2();
         $https="https://api.weixin.qq.com/cgi-bin/menu/create?access_token=".$access_token;
        // dd($https);
@@ -287,7 +298,9 @@ class WeixinController extends Controller
         $data= $resoonse->getBody();
         echo $data;
     }
+    //签到
     public  function qiandao(){
+
 
     }
     //xml

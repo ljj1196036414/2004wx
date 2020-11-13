@@ -76,10 +76,12 @@ class WeixinController extends Controller
                 if($EventKey=='V1003_TODAY_MUSIC'){   //微信授权
                     $code=$this->shouquan();
                     if(!empty($code)){
-                        echo "授权成功";
+                        $content= "授权成功";
                     }else{
-                        echo "授权失败";
+                        $content= "授权失败";
                     }
+                    $object=$this->xml_obj;
+                    $this->transmitText($object, $content);
                 }
                 $openid=$this->xml_obj->FromUserName;
                 $where=[

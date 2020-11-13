@@ -330,7 +330,7 @@ class WeixinController extends Controller
         ];
 
         $access_token=$this->weixin2();
-        $https="https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=".$access_token;
+        $https="https://api.weixin.qq.com/cgi-bin/menu/create?access_token=".$access_token;
        // dd($https);
         $client=new Client();
 

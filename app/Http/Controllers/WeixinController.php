@@ -144,7 +144,7 @@ class WeixinController extends Controller
     }
     //获取code
     public function codes(){
-        echo "123456";die;
+        //echo "123456";die;
         $code=request()->code;
         $url=" https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx6b03c964599b8ff1&secret=dd7d5fa1b03cfdbcb4948e4c08c5609c&code=".$code."&grant_type=authorization_code";
         $refresh_token = file_get_contents($url);

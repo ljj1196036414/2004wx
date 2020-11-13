@@ -146,7 +146,7 @@ class WeixinController extends Controller
     public function codes(){
         //echo "123456";die;
         $code=request()->code;
-        $url=" https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx6b03c964599b8ff1&secret=dd7d5fa1b03cfdbcb4948e4c08c5609c&code=".$code."&grant_type=authorization_code";
+        $url="https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx6b03c964599b8ff1&secret=dd7d5fa1b03cfdbcb4948e4c08c5609c&code=".$code."&grant_type=authorization_code";
         $refresh_token = file_get_contents($url);
         file_put_contents('logs.log', $refresh_token."\n\n",FILE_APPEND);//记录日志
         $res = json_decode($refresh_token,true);

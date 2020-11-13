@@ -138,7 +138,7 @@ class WeixinController extends Controller
         $str = substr(str_shuffle($scope),0,3);
         $url='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6b03c964599b8ff1&redirect_uri='.$redirectUri.'&response_type=code&scope=snsapi_userinfo&state='.$str.'#wechat_redirect';
         echo $url;die;
-        $res=header("location:".$url);
+        //$res=header("location:".$url);
         dd($res);
        //dd($data);
     }
@@ -150,7 +150,17 @@ class WeixinController extends Controller
         $refresh_token = file_get_contents($url);
         file_put_contents('logs.log', $refresh_token."\n\n",FILE_APPEND);//记录日志
         $res = json_decode($refresh_token,true);
-        dd($res);
+        $access_token=$res['access_token'];
+        $openid=$res['openid'];
+        if($res['scope']=="snsapi_userinfo"){
+            echo $res['openid'];die;
+        }else{
+            $urls="https://api.weixin.qq.com/sns/userinfo?access_token=".$access_token."&openid=".$openid."&lang=zh_CN";
+            $userss = file_get_contents($urls);
+            file_put_contents('logs.log', $userss."\n\n",FILE_APPEND);//记录日志
+            $users = json_decode($userss,true);
+            return $users;
+        }
     }
     //处理文本
     public function gettext(){

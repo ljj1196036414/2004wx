@@ -69,12 +69,11 @@ class WeixinController extends Controller
                         Redis::zAdd($key,$FromUserName,strtotime(date("Y-m-d")));
                         $Content = '签到成功';
                         echo($Content);
-
                     }
+                    $object=$this->xml_obj;
+                   return $result=$this->transmitText($object,$Content);
                 }//签到
-                $object=$this->xml_obj;
-                $result=$this->transmitText($object,$Content);
-                echo $result;
+
 
 
                 $openid=$this->xml_obj->FromUserName;

@@ -24,6 +24,7 @@ Route::post('createmanu','WeixinController@createmanu'); // 菜单
 Route::get('receive','WeixinController@receive'); // 菜单
 Route::get('receiveEvent','WeixinController@receiveEvent'); // 菜单
 Route::get('gettext','WeixinController@gettext'); // 文本处理
+Route::get('shouquan','WeixinController@shouquan'); // 微信授权
 Route::any('/code','WeixinController@codes'); // 获取code
 Route::post('tianqi','WeixinController@tianqi'); // 天气
 Route::get('time',function(){

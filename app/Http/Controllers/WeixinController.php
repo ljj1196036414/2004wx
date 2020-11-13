@@ -73,7 +73,9 @@ class WeixinController extends Controller
                     $object=$this->xml_obj;
                    return $result=$this->transmitText($object,$Content);
                 }//签到
-
+                if($EventKey=='V1003_TODAY_MUSIC'){   //微信授权
+                    $this->shouquan();
+                }//微信授权
 
 
                 $openid=$this->xml_obj->FromUserName;
@@ -121,6 +123,17 @@ class WeixinController extends Controller
             default:
                 echo 'default';
         }
+    }
+    //微信授权
+    public function shouquan(){
+        //appid 我的微信id
+        //redirect_uri 重定向的回调链接地址
+        //response_type 类型为 code
+        //state  重定向后会带上state参数
+        $connect='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6b03c964599b8ff1&redirect_uri=$redirectUri&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+        $url=file_get_contents($connect);
+        $data=simplexml_load_string($url,'SimpleXMLElement',LIBXML_NOCDATA);
+        return $data;
     }
     //处理文本
     public function gettext(){
@@ -273,9 +286,9 @@ class WeixinController extends Controller
                                 "key"=>"V1002_TODAY_MUSIC"
                             ],
                             [
-                                "type"=>"view",
-                                "name"=>"京东",
-                                "url"=>"https://www.jd.com/"
+                                "type"=>"click",
+                                "name"=>"商城",
+                                "url"=>"V1003_TODAY_MUSIC"
                             ]
                         ]
                     ],
@@ -305,6 +318,7 @@ class WeixinController extends Controller
 
 
     }
+
     //xml
     private function transmitText($object, $content){
         $textTpl = "<xml>

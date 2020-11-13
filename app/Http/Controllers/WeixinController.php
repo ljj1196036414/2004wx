@@ -74,10 +74,13 @@ class WeixinController extends Controller
                    return $result=$this->transmitText($object,$Content);
                 }//签到
                 if($EventKey=='V1003_TODAY_MUSIC'){   //微信授权
-                    $this->shouquan();
-                }//微信授权
-
-
+                    $code=$this->shouquan();
+                    if(!empty($code)){
+                        echo "授权成功";
+                    }else{
+                        echo "授权失败";
+                    }
+                }
                 $openid=$this->xml_obj->FromUserName;
                 $where=[
                     'openid'=>$openid,
@@ -130,10 +133,24 @@ class WeixinController extends Controller
         //redirect_uri 重定向的回调链接地址
         //response_type 类型为 code
         //state  重定向后会带上state参数
-        $connect='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6b03c964599b8ff1&redirect_uri=$redirectUri&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
-        $url=file_get_contents($connect);
-        $data=simplexml_load_string($url,'SimpleXMLElement',LIBXML_NOCDATA);
-        return $data;
+        $scope='ABCDEFGHIGKLMNOPQRSTUVWN1234567890qwertyuiopasdfghjklzxcvbnm';
+        $redirectUri=urlencode("http://www.414shop.top/code");
+        $str = substr(str_shuffle($scope),0,3);
+        $url='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6b03c964599b8ff1&redirect_uri='.$redirectUri.'&response_type=code&scope=snsapi_userinfo&state='.$str.'#wechat_redirect';
+        echo $url;die;
+        $res=header("location:".$url);
+        dd($res);
+       //dd($data);
+    }
+    //获取code
+    public function codes(){
+        echo "123456";die;
+        $code=request()->code;
+        $url=" https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx6b03c964599b8ff1&secret=dd7d5fa1b03cfdbcb4948e4c08c5609c&code=".$code."&grant_type=authorization_code";
+        $refresh_token = file_get_contents($url);
+        file_put_contents('logs.log', $refresh_token."\n\n",FILE_APPEND);//记录日志
+        $res = json_decode($refresh_token,true);
+        dd($res);
     }
     //处理文本
     public function gettext(){

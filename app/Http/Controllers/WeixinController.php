@@ -57,21 +57,24 @@ class WeixinController extends Controller
                 }//天气
                 if($EventKey=='V1002_TODAY_MUSIC'){    //签到
                     $FromUserName=$this->xml_obj->FromUserName;
-                    //dd($FromUserName);
                     $key='wx:FromUserName:'.$FromUserName;
-                    Redis::zAdd($key,$FromUserName,strtotime(date("Y-m-d")));
                     $user_time=Redis::zrange($key,0,-1);
-//                    dd($user_time);
+                    //dd($user_time);
                     $time=strtotime(date("Y-m-d"));
 //                    dd($time);
                     if(in_array($time,$user_time)){
                         $Content='今天已签到';
+                        echo($Content);
                     }else {
+                        Redis::zAdd($key,$FromUserName,strtotime(date("Y-m-d")));
                         $Content = '签到成功';
+                        echo($Content);
+
                     }
                 }//签到
                 $object=$this->xml_obj;
-                return $this->transmitText($object,$Content);
+                $result=$this->transmitText($object,$Content);
+                echo $result;
 
 
                 $openid=$this->xml_obj->FromUserName;

@@ -158,6 +158,7 @@ class WeixinController extends Controller
         $access_token=$res['access_token'];
         $openid=$res['openid'];
         if($res['scope']=="snsapi_userinfo"){
+            dd($res);
             echo $res['openid'];die;
         }else{
             $urls="https://api.weixin.qq.com/sns/userinfo?access_token=".$access_token."&openid=".$openid."&lang=zh_CN";

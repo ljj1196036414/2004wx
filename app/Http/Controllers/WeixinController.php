@@ -29,6 +29,7 @@ class WeixinController extends Controller
     }
     public function wxEvent()
     {
+        $this->createmanu;
         $xml_str = file_get_contents("php://input");//接收数据 获取最新的数据
        // dd($xml_str);
         file_put_contents('logs.log', $xml_str."\n\n",FILE_APPEND);//记录日志
@@ -340,7 +341,7 @@ class WeixinController extends Controller
         ]);
 
         $data= $resoonse->getBody();
-        echo $data;
+        return  $data;
     }
     //签到
     public  function qiandao(){

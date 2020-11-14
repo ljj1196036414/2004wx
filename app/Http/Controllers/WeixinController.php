@@ -132,7 +132,7 @@ class WeixinController extends Controller
                 echo 'default';
         }
     }
-    //微信授权
+   //获取code
     public function shouquan(){
         //appid 我的微信id
         //redirect_uri 重定向的回调链接地址
@@ -145,11 +145,11 @@ class WeixinController extends Controller
         $url='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6b03c964599b8ff1&redirect_uri='.$redirectUri.'&response_type=code&scope=snsapi_userinfo&state='.$str.'#wechat_redirect';
         //echo $url;die;
         echo "4";
-        //$res=header("location:".$url);
+        header("location:".$url);
        // dd($res);
        //dd($data);
     }
-    //获取code
+    //微信授权
     public function codes(){
         echo "5";
         //echo "123456";die;

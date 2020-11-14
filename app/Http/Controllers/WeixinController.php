@@ -77,8 +77,10 @@ class WeixinController extends Controller
                 if($EventKey=='V1003_TODAY_MUSIC'){   //微信授权
                     $code=$this->shouquan();
                     if(!empty($code)){
+                        echo "1";
                         $content= "授权成功";
                     }else{
+                        echo "2";
                         $content= "授权失败";
                     }
                     $object=$this->xml_obj;
@@ -136,17 +138,20 @@ class WeixinController extends Controller
         //redirect_uri 重定向的回调链接地址
         //response_type 类型为 code
         //state  重定向后会带上state参数
+        echo "3";
         $scope='ABCDEFGHIGKLMNOPQRSTUVWN1234567890qwertyuiopasdfghjklzxcvbnm';
         $redirectUri=urlencode("http://www.414shop.top/code");
         $str = substr(str_shuffle($scope),0,3);
         $url='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6b03c964599b8ff1&redirect_uri='.$redirectUri.'&response_type=code&scope=snsapi_userinfo&state='.$str.'#wechat_redirect';
         //echo $url;die;
+        echo "4";
         //$res=header("location:".$url);
        // dd($res);
        //dd($data);
     }
     //获取code
     public function codes(){
+        echo "5";
         //echo "123456";die;
         $code=request()->code;
         $url="https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx6b03c964599b8ff1&secret=dd7d5fa1b03cfdbcb4948e4c08c5609c&code=".$code."&grant_type=authorization_code";
@@ -162,7 +167,7 @@ class WeixinController extends Controller
             $userss = file_get_contents($urls);
             file_put_contents('logs.log', $userss."\n\n",FILE_APPEND);//记录日志
             $users = json_decode($userss,true);
-            echo "tiantian";
+            echo "6";
             return $users;
         }
     }

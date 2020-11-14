@@ -140,8 +140,9 @@ class WeixinController extends Controller
         $redirectUri=urlencode("http://www.414shop.top/code");
         $str = substr(str_shuffle($scope),0,3);
         $url='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6b03c964599b8ff1&redirect_uri='.$redirectUri.'&response_type=code&scope=snsapi_userinfo&state='.$str.'#wechat_redirect';
-        //echo $url;die;
+         echo $url;die;
         header("location:".$url);
+
        // dd($res);
        //dd($data);
     }

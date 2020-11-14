@@ -346,7 +346,7 @@ class WeixinController extends Controller
         ]);
 
         $data= $resoonse->getBody();
-        return  $data;
+        echo $data;
     }
     //签到
     public  function qiandao(){

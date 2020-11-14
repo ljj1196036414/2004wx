@@ -29,7 +29,7 @@ class WeixinController extends Controller
     }
     public function wxEvent()
     {
-        $this->createmanu;
+//        $this->check();
         $xml_str = file_get_contents("php://input");//接收数据 获取最新的数据
        // dd($xml_str);
         file_put_contents('logs.log', $xml_str."\n\n",FILE_APPEND);//记录日志
@@ -140,9 +140,9 @@ class WeixinController extends Controller
         $redirectUri=urlencode("http://www.414shop.top/code");
         $str = substr(str_shuffle($scope),0,3);
         $url='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6b03c964599b8ff1&redirect_uri='.$redirectUri.'&response_type=code&scope=snsapi_userinfo&state='.$str.'#wechat_redirect';
-        echo $url;die;
+        //echo $url;die;
         //$res=header("location:".$url);
-        dd($res);
+       // dd($res);
        //dd($data);
     }
     //获取code
@@ -318,7 +318,7 @@ class WeixinController extends Controller
                             [
                                 "type"=>"click",
                                 "name"=>"商城",
-                                "url"=>"V1003_TODAY_MUSIC"
+                                "key"=>"V1003_TODAY_MUSIC"
                             ]
                         ]
                     ],

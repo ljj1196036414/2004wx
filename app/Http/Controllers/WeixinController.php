@@ -162,6 +162,7 @@ class WeixinController extends Controller
             $userss = file_get_contents($urls);
             file_put_contents('logs.log', $userss."\n\n",FILE_APPEND);//记录日志
             $users = json_decode($userss,true);
+            echo "tiantian";
             return $users;
         }
     }
